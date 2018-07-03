@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Animal Buttons</title>
+</head>
+
+<body>
+    <!-- From StackOverFlow - How to Put a Form Inside a Jumbotron... -->
+
+    <!-- <div class="jumbotron text-center" id="jumbotron">
+                <h1 class="display-3">Lorem Ipsum</h1>
+                <p class="lead">Lorem ipsum</p>
+                <hr class="my-y-2">
+                <p>################</p>
+                <form class="form-inline justify-content-center">
+            
+                    <label class="sr-only" for="email">Email</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">@</div>
+            
+                            <input type="email" class="form-control" id="email" placeholder="Email">
+                        </div>
+            
+                    </div>
+            
+                    <button type="submit" class="btn btn-primary mb-2">Sign Up</button>
+                </form>
+            </div> -->
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container text-center">
+            <h1 class="display-3" "text-center"> My Precious Animal-Giphy Button!</h1>
+            <form>
+                <span id="todo-item">To Do Item:
+                    <input id="to-do" type="text" style="text-transform:lowercase" placeholder="Choose an Animal">
+                    <input id="add-to-do" value="Add Item" type="submit">
+                </span>
+            </form>
+        </div>
+    </div>
+
+    <!-- Input Form -->
+
+    <br>
+    <hr>
+    <div class="jumbotron jumbotron-special">
+        <div class="container-fluid">
+            <h4> Click Items to Release the Giphyness!</h4>
+            <hr>
+            <br>
+            <div id="to-dos"></div>
+        </div>
+    </div>
+    <!-- To-Do List -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var toDoCount = 0;
+            var topics = ["cat", "dog", "bird", "lemur", "horse", "pig", "donkey",
+                "cow", "goat",
+                "monkey", "deer",
+                "elk", "bear"
+            ];
+            var toDoTask = $("#to-do").val().trim();
+            var toDoItem = $("<p>");
+            var start = $("#add-to-do").on("click", function (event) {
+                event.preventDefault();
+
+
+
+                for (var y = 0; y < topics.length; y++) {
+                    // <!-- it may have to be a .indexOf or inArray  -->
+                    if (topics[y].includes(toDoTask) || (topics[y].indexOf(toDoTask) > -1)) {
+                        // || topics[y].inArray(toDoTask) || toDoTask.indexOf(
+                        //     topics[y])) {
+                        $(toDoTask).append(toDoItem);
+                        toDoItem.attr("id", "item-" + toDoCount);
+                        var toDoClose = $("#to-dos").append($("<button>"));
+                        $(toDoClose).attr("data-to-do", toDoCount);
+                        $(toDoClose).addClass("checkbox");
+                        $(toDoClose).append('✓ ' + toDoTask);
+                        toDoItem.append(" " + toDoClose);
+
+                        $(toDoClose).on("click", function () {
+
+                            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                                toDoTask + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+
+                            $.ajax({
+                                    url: queryURL,
+                                    method: "GET"
+                                })
+
+                                .then(function (response) {
+                                    console.log(queryURL);
+
+                                    console.log(response);
+
+                                    var results = response.data;
+
+
+
+                                    for (var i = 0; i < results.length; i++) {
+                                        var animalDiv = $("<div>");
+
+
+                                        var p = $("<p>").text("Rating: " + results[i].rating);
+
+
+                                        var animalImage = $("<img>");
+
+                                        animalImage.attr("src", results[i].images.fixed_height
+                                            .url);
+                                        var state = animalImage.attr("data-state")
+
+                                        if (state === "still") {
+                                            $(this).attr("src", $(animalImage).attr(
+                                                "data-animate"));
+                                            $(this).attr("data-state", "animate");
+                                        } else {
+                                            $(this).attr("src", $(animalImage).attr(
+                                                "data-still"));
+                                            $(this).attr("data-state", "still");
+                                        }
+
+                                        animalDiv.append(p);
+                                        animalDiv.append(animalImage);
+
+
+                                        $("#to-dos").prepend(animalDiv);
+                                    }
+
+                                })
+                            toDoItem = toDoItem.prepend(toDoClose);
+
+
+                            $("#to-dos").append(toDoItem);
+
+
+                            $("#to-do").val("");
+
+
+                            toDoCount++;
+                            console.log($(".toDoClose"));
+                            console.log(toDoTask);
+                            console.log(toDoCount);
+
+                        })
+
+
+                    } else {
+                        $("#to-do").empty().attr("placeholder", "Try Again Sucka!");
+                        $("#to-do").last().remove();
+                        start.event;
+                    }
+                };
+            })
+        })
+    </script>
+
+</body>
+
+</html>
+
+</script>
+</body>
+
+</html>
